@@ -29,3 +29,10 @@ export interface IMessageProps {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ICreateChatProps {
+  content: string;
+  providerName: string;
+  selectedModel: string;
+  messageId: number;
+}

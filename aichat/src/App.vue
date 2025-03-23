@@ -37,7 +37,7 @@ import { IConversationProps } from "./types";
 const conversations = ref<IConversationProps[]>([]);
 onMounted(async () => {
   await initProviders();
-  const conversations = await db.conversations.toArray();
-  console.log("conversations", conversations);
+  conversations.value = await db.conversations.toArray();
+  console.log("conversations", conversations.value);
 });
 </script>
