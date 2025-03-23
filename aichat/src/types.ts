@@ -17,3 +17,15 @@ export interface IProviderProps {
   updatedAt: string;
   models: string[];
 }
+
+export type MessageStatus = "loading" | "streaming" | "finished";
+
+export interface IMessageProps {
+  id: number;
+  content: string;
+  type: "question" | "answer";
+  conversationId: number;
+  status?: MessageStatus;
+  createdAt: string;
+  updatedAt: string;
+}

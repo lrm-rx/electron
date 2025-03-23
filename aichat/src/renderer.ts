@@ -35,7 +35,7 @@ import "./index.css";
 
 const routes = [
   { path: "/", component: Home },
-  { path: "/conversation", component: Conversation },
+  { path: "/conversation/:id", component: Conversation },
   { path: "/settings", component: Settings },
 ];
 const router = createRouter({
@@ -43,7 +43,4 @@ const router = createRouter({
   routes,
 });
 
-console.log(
-  '👋 This message is being logged by "renderer.ts", included via Vite'
-);
 createApp(App).use(router).mount("#app");
