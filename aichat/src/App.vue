@@ -27,8 +27,17 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import ConversationList from "./components/ConversationList.vue";
 import Button from "./components/Button.vue";
-import { conversations } from "./testData";
+import { db, initProviders } from "./db";
+import { IConversationProps } from "./types";
+
+const conversations = ref<IConversationProps[]>([]);
+onMounted(async () => {
+  await initProviders();
+  const conversations = await db.conversations.toArray();
+  console.log("conversations", conversations);
+});
 </script>

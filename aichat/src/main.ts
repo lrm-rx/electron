@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from "electron";
-import { ChatCompletion } from "@baiducloud/qianfan";
 import path from "node:path";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -28,17 +27,6 @@ const createWindow = async () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
-  const client = new ChatCompletion();
-  const resp = await client.chat(
-    {
-      messages: [{ role: "user", content: "什么是光合作用?" }],
-      stream: true,
-    },
-    "ERNIE-Speed-128K"
-  );
-  for await (const chunk of resp) {
-    console.log("chunk:", chunk);
-  }
 };
 
 // This method will be called when Electron has finished
