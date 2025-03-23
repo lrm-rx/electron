@@ -6,6 +6,7 @@
       class="outline-none border-0 flex-1 bg-white focus:ring-0"
       type="text"
       v-model="model"
+      @keydown.enter="onCreate"
     />
     <Button icon-name="radix-icons:paper-plane" @click="onCreate">发送</Button>
   </div>

@@ -11,7 +11,7 @@
             class="text-sm text-gray-500 mb-2"
             :class="{ 'text-right': message.type === 'question' }"
           >
-            {{ message.createdAt }}
+            {{ dayjs(message.createdAt).format("YYYY-MM-DD HH:mm:ss")  }}
           </div>
           <div
             class="message-question bg-violet-600 text-white p-2 rounded-md"
@@ -38,6 +38,7 @@
 
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
+import dayjs from "dayjs";
 import { IMessageProps } from "../types";
 defineProps<{ messages: IMessageProps[] }>();
 </script>

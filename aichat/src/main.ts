@@ -1,5 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
+import { ChatCompletion } from "@baiducloud/qianfan";
+import "dotenv/config";
 import { ICreateChatProps } from "./types";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -17,8 +19,30 @@ const createWindow = async () => {
     },
   });
 
-  ipcMain.on("start-chat", async (event, content: ICreateChatProps) => {
-    console.log("hey", content);
+  // todo  支持阿里通义千问
+  ipcMain.on("start-chat", async (event, data: ICreateChatProps) => {
+    const { providerName, content, messageId, selectedModel } = data;
+    if (providerName === "qianfan") {
+      const client = new ChatCompletion();
+      const stream = await client.chat(
+        {
+          messages: [{ role: "user", content }],
+          stream: true,
+        },
+        selectedModel
+      );
+      for await (const chunk of stream) {
+        const { is_end, result } = chunk;
+        const content = {
+          messageId,
+          data: {
+            is_end,
+            result,
+          },
+        };
+        mainWindow.webContents.send("update-message", content);
+      }
+    }
   });
 
   // and load the index.html of the app.

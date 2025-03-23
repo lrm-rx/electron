@@ -10,7 +10,7 @@
           class="flex justify-between items-center text-sm leading-5 text-gray-500"
         >
           <span>{{ item.selectedModel }}</span>
-          <span>{{ dayjs(item.updatedAt).format("YYYY-MM-DD") }}</span>
+          <span>{{ dayjs(item.updatedAt).format("YYYY-MM-DD HH:mm") }}</span>
         </div>
         <h2 class="font-semibold leading-6 text-gray-900 truncate">
           {{ item.title }}

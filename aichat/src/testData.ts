@@ -27,9 +27,10 @@ export const conversations: IConversationProps[] = [
 export const providers: IProviderProps[] = [
   {
     id: 1,
-    name: "文心一言",
+    name: "qianfan",
+    title: '百度千帆',
     desc: "文心一言 百度出品的大模型",
-    models: ["ERNIE-4.0-8K", "ERNIE-3.5-8K", "ERNIE-Speed-8K"],
+    models: ["ERNIE-4.0-8K", "ERNIE-3.5-8K", "ERNIE-Speed-128K"],
     avatar:
       "https://nlp-eb.cdn.bcebos.com/static/eb/asset/vip-robin.930b8cae.png",
     createdAt: "2025-03-20",
@@ -37,9 +38,9 @@ export const providers: IProviderProps[] = [
   },
   {
     id: 2,
-    name: "通义千问",
+    name: 'dashscope',
+    title: '阿里百炼',
     desc: "通义千问",
-    // https://help.aliyun.com/zh/dashscope/developer-reference/api-details?spm=a2c4g.11186623.0.0.5bf41507xgULX5#b148acc634pfc
     models: ["qwen-turbo", "qwen-plus", "qwen-max"],
     avatar:
       "https://img.alicdn.com/imgextra/i4/O1CN01EfJVFQ1uZPd7W4W6i_!!6000000006051-2-tps-112-112.png",

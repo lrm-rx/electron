@@ -5,10 +5,10 @@
   >
     <h3 class="font-semibold text-gray-900">{{ convsersation.title }}</h3>
     <span class="text-sm text-gray-500">{{
-      dayjs(convsersation.updatedAt).format("YYYY-MM-DD")
+      dayjs(convsersation.updatedAt).format("YYYY-MM-DD HH:mm")
     }}</span>
   </div>
-  <div class="w-[80%] mx-auto h-[75%] overflow-y-auto pt-2">
+  <div class="w-[80%] mx-auto h-[75%] overflow-y-auto thin-scrollbar pt-2 pr-1">
     <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] mx-auto h-[15%] flex items-center">
@@ -21,7 +21,7 @@ import { useRoute } from "vue-router";
 import dayjs from "dayjs";
 import MessageInput from "../components/MessageInput.vue";
 import MessageList from "../components/MessageList.vue";
-import { IMessageProps, IConversationProps } from "../types";
+import { IMessageProps, IConversationProps, MessageStatus } from "../types";
 import { db } from "../db";
 
 const route = useRoute();
@@ -47,7 +47,6 @@ const creatingInitialMessage = async () => {
       .where({ id: convsersation.value.providerId })
       .first();
     if (provider) {
-      console.log("provider", provider);
       await window.electronAPI.startChat({
         messageId: newMessageId,
         providerName: provider.name,
@@ -76,9 +75,33 @@ onMounted(async () => {
   filteredMessages.value = await db.messages
     .where({ conversationId })
     .toArray();
-  if (!initMessageId) return;
-  const lastMessage = await db.messages.where({ conversationId }).last();
-  lastQuestion = lastMessage?.content || "";
-  await creatingInitialMessage();
+  if (initMessageId) {
+    const lastMessage = await db.messages.where({ conversationId }).last();
+    lastQuestion = lastMessage?.content || "";
+    await creatingInitialMessage();
+  }
+  window.electronAPI.onUpdateMessage(async (streamData: any) => {
+    // update database
+    // update filteredMessages
+    const { messageId, data } = streamData;
+    const currentMessage = await db.messages.where({ id: messageId }).first();
+    if (currentMessage) {
+      const updatedData = {
+        content: currentMessage.content + data.result,
+        status: data.is_end ? "finished" : ("streaming" as MessageStatus),
+        updatedAt: new Date().toISOString(),
+      };
+      await db.messages.update(messageId, updatedData);
+      const index = filteredMessages.value.findIndex(
+        (item) => item.id === messageId
+      );
+      if (index !== -1) {
+        filteredMessages.value[index] = {
+          ...filteredMessages.value[index],
+          ...updatedData,
+        };
+      }
+    }
+  });
 });
 </script>

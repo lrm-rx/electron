@@ -11,7 +11,7 @@
             <div v-for="provider in providers">
               <SelectLabel class="flex items-center px-6 h-7 text-gray-500">
                 <img class="h-5 w-5 mr-2 rounded" :src="provider.avatar" :alt="provider.name"  />
-                {{ provider.name }}
+                {{ provider.title }}
               </SelectLabel>
               <SelectGroup>
                 <SelectItem
