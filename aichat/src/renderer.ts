@@ -27,6 +27,7 @@
  */
 import { createApp } from "vue";
 import { createRouter, createMemoryHistory } from "vue-router";
+import { createPinia } from "pinia";
 import App from "./App.vue";
 import Home from "./views/Home.vue";
 import Conversation from "./views/Conversation.vue";
@@ -42,5 +43,6 @@ const router = createRouter({
   history: createMemoryHistory(),
   routes,
 });
+const pinia = createPinia();
 
-createApp(App).use(router).mount("#app");
+createApp(App).use(router).use(pinia).mount("#app");

@@ -12,12 +12,14 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useConversationStore } from "../stores/conversation";
 import { db } from "../db";
 import { IProviderProps } from "../types";
 import ProviderSelect from "../components/ProviderSelect.vue";
 import MessageInput from "../components/MessageInput.vue";
 const currentProvider = ref("");
 
+const conversationStore = useConversationStore();
 const router = useRouter();
 const providers = ref<IProviderProps[]>([]);
 onMounted(async () => {
@@ -34,7 +36,7 @@ const modelInfo = computed(() => {
 const createConversation = async (question: string) => {
   const { providerId, selectedModel } = modelInfo.value;
   const currentDate = new Date().toISOString();
-  const conversationId = await db.conversations.add({
+  const conversationId = await conversationStore.createConversation({
     title: question,
     providerId,
     selectedModel,
