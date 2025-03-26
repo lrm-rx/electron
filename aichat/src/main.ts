@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import { ChatCompletion } from "@baiducloud/qianfan";
+import OpenAI from "openai";
 import "dotenv/config";
 import { ICreateChatProps } from "./types";
 
@@ -19,7 +20,6 @@ const createWindow = async () => {
     },
   });
 
-  // todo  支持阿里通义千问
   ipcMain.on("start-chat", async (event, data: ICreateChatProps) => {
     const { providerName, content, messageId, selectedModel } = data;
     if (providerName === "qianfan") {
@@ -38,6 +38,27 @@ const createWindow = async () => {
           data: {
             is_end,
             result,
+          },
+        };
+        mainWindow.webContents.send("update-message", content);
+      }
+    } else if (providerName === "dashscope") {
+      const openai = new OpenAI({
+        apiKey: process.env.DASHSCOPE_API_KEY,
+        baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      });
+      const stream = await openai.chat.completions.create({
+        messages: [{ role: "user", content }],
+        stream: true,
+        model: selectedModel,
+      });
+      for await (const chunk of stream) {
+        const choice = chunk.choices[0];
+        const content = {
+          messageId,
+          data: {
+            is_end: choice.finish_reason === "stop",
+            result: choice.delta.content ?? "",
           },
         };
         mainWindow.webContents.send("update-message", content);
